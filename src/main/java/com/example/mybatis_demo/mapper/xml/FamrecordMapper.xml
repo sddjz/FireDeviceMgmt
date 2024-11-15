@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mybatis_demo.mapper.FamrecordMapper">
+
+    <resultMap id="famRecordInfo" type="com.example.mybatis_demo.entity.Famrecord">
+        <id column="famrecordid" property="id"/>
+        <result column="famrepairtime" property="repairTime"/>
+        <result column="famrepairname" property="repairName"/>
+        <result column="samreviewId" property="reviewId"/>
+        <result column="famfee" property="fee"/>
+        <result column="famdescp" property="descp"/>
+        <result column="famserial_num" property="serialNum"/>
+        <result column="famreviewename" property="reviewUserName"/>
+        <result column="famassetname" property="fassetName"/>
+        <result column="famtypename" property="fatypeName"/>
+
+
+    </resultMap>
+
+
+    <select id="listFamRecord" resultMap="famRecordInfo">
+        select famrecord.id as famrecordid,famrecord.repair_time as famrepairtime,
+        famrecord.repair_name as famrepairname,
+        famrecord.review_id as famreviewId,famrecord.fee as famfee,famrecord.descp as famdescp,
+        fireasset.serial_num as famserial_num,user.name as famreviewename,
+        fireasset.name as famassetname, firetype.name as  famtypename
+        from
+        famrecord  , fireasset  , firetype  ,user where famrecord.fa_id=fireasset.id and firetype.id=fireasset.fire_type and famrecord.review_id=user.id
+
+        <if test="ew!=null" >
+            <if test="ew.nonEmptyOfWhere">
+                AND
+            </if>
+            ${ew.SqlSegment}
+        </if>
+    </select>
+
+
+</mapper>

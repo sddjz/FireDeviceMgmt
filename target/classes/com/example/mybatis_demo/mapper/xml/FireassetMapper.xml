@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mybatis_demo.mapper.FireassetMapper">
+    <resultMap id="faAssetInfo" type="com.example.mybatis_demo.entity.Fireasset">
+        <id column="faid" property="id"/>
+        <result column="faname" property="name"/>
+        <result column="faprice" property="price"/>
+        <result column="faserialnum" property="serialNum"/>
+        <result column="favendorid" property="vendorId"/>
+        <result column="fabuydate" property="buyDate"/>
+        <result column="fareposid" property="reposId"/>
+        <result column="fastatus" property="status"/>
+        <result column="fabankid" property="bankId"/>
+        <result column="fasignerid" property="signerId"/>
+        <result column="fatype" property="fireType"/>
+        <result column="facreate" property="gmtCreate"/>
+        <result column="famodified" property="gmtModified"/>
+        <result column="fainstore" property="gmtInStore"/>
+
+
+        <association property="reposUser" javaType="com.example.mybatis_demo.entity.User">
+            <id column="reuserid" property="id"/>
+            <result column="reusername" property="name"/>
+        </association>
+
+        <association property="signerUser" javaType="com.example.mybatis_demo.entity.User">
+            <id column="siuserid" property="id"/>
+            <result column="siusername" property="name"/>
+        </association>
+
+
+        <association property="fa_type" javaType="com.example.mybatis_demo.entity.Firetype">
+            <id column="fatypeid" property="id"/>
+            <result column="fatypename" property="name"/>
+        </association>
+
+        <association property="vendor" javaType="com.example.mybatis_demo.entity.Vendor">
+            <id column="vendorid" property="id"/>
+            <result column="vendorname" property="name"/>
+        </association>
+        <association property="bank" javaType="com.example.mybatis_demo.entity.Bank">
+            <id column="bankid" property="id"/>
+            <result column="bankname" property="name"/>
+            <result column="banklevel" property="level"/>
+            <result column="bankparentid" property="parent_id"/>
+        </association>
+    </resultMap>
+
+
+    <select id="listFaAsset" resultMap="faAssetInfo">
+        select fireasset.id as faid, fireasset.name as faname, fireasset.serial_num as faserialnum,fireasset.price as faprice,fireasset.vendor_id as favendorid,
+        fireasset.buy_date as fabuydate, fireasset.repos_id as fareposid, fireasset.status as fastatus,
+        fireasset.bank_id as fabankid, fireasset.signer_id as fasignerid,
+        fireasset.fire_type as fatype, fireasset.gmt_create as facreate,fireasset.gmt_modified as  famodified,
+        fireasset.gmt_in_store as fainstore,
+        respons.id as reuserid,respons.name as  reusername,
+        signer.id as siuserid, signer.name as siusername,
+        firetype.id as fatypeid, firetype.name as fatypename,
+        vendor.id as vendorid, vendor.name as vendorname,
+        bank.id as bankid,bank.name as  bankname,bank.level as  banklevel,
+        bank.parent_id as bankparentid
+        from
+        fireasset left join user signer on fireasset.signer_id=signer.id
+        left join user respons on fireasset.repos_id=respons.id,
+        firetype,vendor,bank  where
+        fireasset.vendor_id= vendor.id and fireasset.fire_type = firetype.id and
+        bank.id=fireasset.bank_id
+        <if test="ew!=null" >
+            <if test="ew.nonEmptyOfWhere">
+                AND
+            </if>
+            ${ew.SqlSegment}
+        </if>
+    </select>
+</mapper>

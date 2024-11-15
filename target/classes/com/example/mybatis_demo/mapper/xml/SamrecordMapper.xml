@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mybatis_demo.mapper.SamrecordMapper">
+
+    <!--
+         private Long saId;       private String repairName;      private String repairTime;
+          private Long reviewId;      private BigDecimal fee;      private String desc;
+              private String serial_num; //设备序列号      private String reviewerName; //审核人
+                private String sa_name; //设备名称；
+    -->
+
+
+    <resultMap id="samRecordInfo" type="com.example.mybatis_demo.entity.Samrecord">
+        <id column="samid" property="id"/>
+        <result column="samname" property="repairName"/>
+        <result column="samrepairtime" property="repairTime"/>
+        <result column="samreviewId" property="reviewId"/>
+        <result column="samfee" property="fee"/>
+        <result column="samdescp" property="descp"/>
+        <result column="samserial_num" property="serial_num"/>
+        <result column="samreviewerName" property="reviewerName"/>
+        <result column="samsa_name" property="sa_name"/>
+        <result column="samsatypename" property="satype_name"/>
+
+
+    </resultMap>
+
+
+    <select id="listSamRecord" resultMap="samRecordInfo">
+        select sam.id as samid,sam.repair_time as samrepairtime,
+        sam.repair_name as samname,
+        sam.review_id as samreviewId,sam.fee as samfee,sam.descp as samdescp,
+        sa.serial_num as samserial_num,user.name as samreviewerName,
+        sa.name as samsa_name, st.name as  samsatypename
+        from
+        samrecord sam, saasset sa, satype st,user where sam.sa_id=sa.id and st.id=sa.sa_type and sam.review_id=user.id
+        <if test="ew!=null" >
+            <if test="ew.nonEmptyOfWhere">
+                AND
+            </if>
+            ${ew.SqlSegment}
+        </if>
+    </select>
+
+
+
+</mapper>

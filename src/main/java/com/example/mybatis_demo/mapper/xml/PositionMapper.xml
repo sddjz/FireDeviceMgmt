@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mybatis_demo.mapper.PositionMapper">
+
+
+    <resultMap id="position_item" type="com.example.mybatis_demo.entity.Position">
+        <id column="role_id" property="id"/>
+        <result column="role_key" property="name"/>
+        <result column="role_name" property="desc"/>
+        <result column="role_name" property="deptId"/>
+    </resultMap>
+
+    <select id="FetchRole" resultMap="position_item">
+        select user_role.role_id ,role_key,credit.role.name  as role_name,menu.id as menu_id,
+               menu.parent_id as menu_parent_id,menu.title as menu_title,
+               menu.level as menu_level, menu.sort as menu_sort, menu.name as menu_name,
+               menu.icon as menu_icon,menu.hidden as menu_hidden,menu.create_time as menu_create_time
+        from user_role left join credit.role on user_role.role_id =credit.role.id
+                       left join role_menu on role_menu.role_id =credit.role.id
+                       left join menu on role_menu.menu_id = menu.id
+        where user_role.user_id= #{userId}
+
+    </select>
+
+</mapper>

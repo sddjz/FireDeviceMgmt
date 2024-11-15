@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mybatis_demo.mapper.RectifyMapper">
+
+    <resultMap id="rectify_info" type="com.example.mybatis_demo.entity.Rectify">
+
+            <id column="rectify_id" property="id"/>
+            <id column="rectify_start_user_id" property="startUserId"/>
+            <result column="rectify_start_time" property="startedTime"/>
+            <result column="rectify_review_id" property="reviewId"/>
+            <result column="rectify_descp" property="descp"/>
+            <result column="rectify_status" property="status"/>
+             <result column="rectify_finished_date" property="finishedDate"/>
+                <result column="rectify_deadline" property="deadline"/>
+                <result column="rectify_fee" property="fee"/>
+                <result column="rectify_budget" property="budget"/>
+               <association property="receiver"  javaType="com.example.mybatis_demo.entity.User">
+                <result column="recv_user_id" property="id"/>
+                <result column="recv_user_name" property="name"/>
+            </association>
+            <association property="startUser"  javaType="com.example.mybatis_demo.entity.User">
+            <result column="send_user_id" property="id"/>
+            <result column="send_user_name" property="name"/>
+            </association>
+
+            <collection property="rectifyfa"  ofType="com.example.mybatis_demo.entity.Rectifyfa">
+                <result column="rectifyfa_id" property="id"/>
+                <result column="rectifyfa_asset_id" property="assetId"/>
+                <result column="rectifyfa_descp" property="descp"/>
+                <result column="rectifyfa_finished_date" property="finishedDate"/>
+                <result column="rectifyfa_status" property="status"/>
+                <result column="rectifyfa_deadline" property="deadline"/>
+                <result column="rectifyfa_fee" property="fee"/>
+                <result column="rectifyfa_budget" property="budget"/>
+
+                <association property="rectifyUser"  javaType="com.example.mybatis_demo.entity.User">
+                    <result column="rectifyfa_user_id" property="id"/>
+                    <result column="rectifyfa_user_name" property="name"/>
+                </association>
+
+                <association property="fireasset"   javaType="com.example.mybatis_demo.entity.Fireasset">
+                    <result column="rectifyfa_asset_id" property="id"/>
+                    <result column="rectifyfa_asset_name" property="name"/>
+                </association>
+            </collection>
+
+            <collection property="rectifysa"  ofType="com.example.mybatis_demo.entity.Rectifysa">
+                <result column="rectifysa_id" property="id"/>
+                <result column="rectifysa_asset_id" property="assetId"/>
+                <result column="rectifysa_descp" property="descp"/>
+                <result column="rectifysa_finished_date" property="finishedDate"/>
+                <result column="rectifysa_status" property="status"/>
+                <result column="rectifysa_deadline" property="deadline"/>
+                <result column="rectifysa_fee" property="fee"/>
+
+                <association property="rectifyUser"  javaType="com.example.mybatis_demo.entity.User">
+                    <result column="rectifysa_user_id" property="id"/>
+                    <result column="rectifysa_user_name" property="name"/>
+                   	<result column="rectifysa_budget" property="budget"/>
+                    
+                </association>
+
+                <association property="saasset"   javaType="com.example.mybatis_demo.entity.Saasset">
+                    <result column="rectifysa_asset_id" property="id"/>
+                    <result column="rectifysa_asset_name" property="name"/>
+                </association>
+            </collection>
+
+            <collection property="rectifyother"  ofType="com.example.mybatis_demo.entity.Rectifyother">
+                <result column="rectifyother_id" property="id"/>
+                <result column="rectifyother_descp" property="descp"/>
+                <result column="rectifyother_finished_date" property="finishedDate"/>
+                <result column="rectifyother_status" property="status"/>
+                <result column="rectifyother_deadline" property="deadline"/>
+                <result column="rectifyother_fee" property="fee"/>
+                   	<result column="rectifyother_budget" property="budget"/>
+
+                <association property="rectifyUser"  javaType="com.example.mybatis_demo.entity.User">
+                    <result column="rectifyother_user_id" property="id"/>
+                    <result column="rectifyother_user_name" property="name"/>
+                </association>
+
+
+            </collection>
+
+    </resultMap>
+    <select id="getRectify" resultMap="rectify_info">
+        select
+        rectify.id as rectify_id,rectify.start_user_id as rectify_start_user_id,
+        rectify.review_id as rectify_review_id,
+        rectify.started_time as rectify_start_time,rectify.descp as rectify_descp,
+        rectify.status as rectify_status,
+        rectify.finished_date as rectify_finished_date,  rectify.deadline as rectify_deadline ,
+        rectify.fee as rectify_fee, rectify.budget as rectify_budget,
+        rectifyfa.id as rectifyfa_id,rectifyfa.asset_id as rectifyfa_asset_id,
+        rectifyfa.descp as rectifyfa_descp, rectifyfa.finished_date as rectifyfa_finished_date,
+        rectifyfa.status as rectifyfa_status,rectifyfa.deadline as rectifyfa_deadline,rectifyfa.fee as rectifyfa_fee
+        ,rectifyfa.receiver_id as rectifyfa_user_id,
+        fauser.name as rectifyfa_user_name,
+        fireasset.name as rectifyfa_asset_name,
+        rectifysa.id as rectifysa_id,rectifysa.asset_id as rectifysa_asset_id,
+        rectifysa.descp as rectifysa_descp,rectifysa.finished_date as rectifysa_finished_date,rectifysa.status as rectifysa_status,
+        rectifysa.deadline as rectifysa_deadline,rectifysa.fee as rectifysa_fee,
+        rectifysa.receiver_id as rectifysa_user_id,
+        sauser.name as rectifysa_user_name,
+        saasset.name  as rectifysa_asset_name,
+        rectifyother.id as rectifyother_id,rectifyother.descp as rectifyother_descp,rectifyother.finished_date as rectifyother_finished_date,
+        rectifyother.status as rectifyother_status,rectifyother.deadline as rectifyother_deadline,rectifyother.fee as rectifyother_fee,
+        rectifyother.receiver_id as rectifyother_user_id,
+        ouser.name as rectifyother_user_name,
+        send_user.id as send_user_id , send_user.name as send_user_name,
+        recv_user.id as recv_user_id , recv_user.name as recv_user_name
+
+        from rectify left join rectifysa on rectify.id=rectifysa.rectify_id
+        left join  rectifyfa on rectify.id=rectifyfa.rectify_id
+        left join rectifyother on rectifyother.rectify_id=rectify.id
+        left join user sauser on rectifysa.receiver_id = sauser.id
+        left join user fauser on rectifyfa.receiver_id = fauser.id
+        left join user ouser on rectifyother.receiver_id = ouser.id
+        left join user send_user on rectify.start_user_id= send_user.id
+        left join user recv_user on rectify.receiver_id = recv_user.id
+        left join fireasset on fireasset.id=rectifyfa.asset_id
+        left join saasset  on saasset.id=rectifysa.asset_id
+        <if test="ew!=null" >
+            <if test="ew.nonEmptyOfWhere">
+                WHERE
+            </if>
+            ${ew.SqlSegment}
+        </if>
+    </select>
+
+    <resultMap id="rectify_list" type="com.example.mybatis_demo.entity.Rectify">
+
+        <id column="rectify_id" property="id"/>
+        <id column="rectify_start_user_id" property="startUserId"/>
+        <result column="rectify_start_time" property="startedTime"/>
+        <result column="rectify_review_id" property="reviewId"/>
+        <result column="rectify_review_serial_num" property="reviewSerialNum"/>
+        <result column="rectify_review_date" property="reviewDate"/>
+        <result column="rectify_descp" property="descp"/>
+        <result column="rectify_status" property="status"/>
+        <association property="receiver"  javaType="com.example.mybatis_demo.entity.User">
+            <result column="recv_user_id" property="id"/>
+            <result column="recv_user_name" property="name"/>
+        </association>
+        <association property="startUser"  javaType="com.example.mybatis_demo.entity.User">
+            <result column="send_user_id" property="id"/>
+            <result column="send_user_name" property="name"/>
+        </association>
+
+
+    </resultMap>
+    <select id="listRectify" resultMap="rectify_list">
+        select
+        rectify.id as rectify_id,rectify.start_user_id as rectify_start_user_id,
+        rectify.review_id as rectify_review_id,
+        rectify.started_time as rectify_start_time,rectify.descp as rectify_descp,
+        rectify.status as rectify_status,
+        send_user.id as send_user_id , send_user.name as send_user_name,
+        recv_user.id as recv_user_id , recv_user.name as recv_user_name,
+        review.id as rectify_review_id, review.serial_num as rectify_review_serial_num,
+        review.review_date as rectify_review_date
+        from rectify left join review on review.id=rectify.review_id
+        left join user send_user on rectify.start_user_id= send_user.id
+        left join user recv_user on rectify.receiver_id = recv_user.id
+        <if test="ew!=null" >
+            <if test="ew.nonEmptyOfWhere">
+                WHERE
+            </if>
+            ${ew.SqlSegment}
+        </if>
+    </select>
+
+</mapper>

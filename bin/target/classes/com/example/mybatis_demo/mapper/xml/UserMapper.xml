@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mybatis_demo.mapper.UserMapper">
+
+<resultMap id="UserInfo" type="com.example.mybatis_demo.entity.User">
+    <id column="userid" property="id"/>
+    <result column="username" property="name"/>
+    <result column="social_id" property="social_id"/>
+    <result column="email" property="email"/>
+    <result column="address" property="address"/>
+    <result column="phone" property="phone"/>
+
+    <association property="pos" javaType="com.example.mybatis_demo.entity.Position">
+        <id column="posid" property="id"/>
+        <result column="posname" property="name"/>
+    </association>
+
+    <association property="dept" javaType="com.example.mybatis_demo.entity.Dept">
+        <!--指定Department中的属性映射，这里也可以使用单独拎出来，然后使用association中的resultMap属性指定-->
+        <id column="deptid" property="id"/>
+        <result column="deptname" property="name"/>
+    </association>
+
+    <association property="bank" javaType="com.example.mybatis_demo.entity.Bank">
+        <id column="bankid" property="id"/>
+        <result column="bankname" property="name"/>
+    </association>
+</resultMap>
+
+
+
+    <select id="FetchUserInfo" resultMap="UserInfo">
+        select user.id as userid,user.name as username,email,address,phone,social_id,
+              position.id as posid, position.name as posname,
+            dept.id as deptid, dept.name as deptname,
+               bank.id as bankid, bank.name as bankname
+
+        from
+            user
+                left join user_pos
+                          on user.id = user_pos.user_id
+                left join position
+                          on user_pos.pos_id = position.id
+                left join pos_dept
+                        on position.id = pos_dept.id
+                left join dept
+                          on pos_dept.pos_id = dept.id
+                left join bank
+                            on bank.id = dept.bank_id
+
+    </select>
+
+</mapper>
+<!--
+    #where p.pid= #{pid}
+
+-->
+
+
+
+
+

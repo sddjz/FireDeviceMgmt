@@ -1,0 +1,87 @@
+server:
+  port: 9000
+
+datasource:
+  url: localhost:3306/credit
+
+
+mybatis-plus:
+  ##开发阶段需要日志，知道怎么 sql exe
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      #逻辑删除值设置；
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+  mapper-locations: classpath:com/example/mybatis_demo/mapper/xml/*Mapper.xml
+
+url:
+  # 订单微服务的地址
+  orderUrl: http://localhost:8002
+  # 用户微服务的地址
+  userUrl: http://localhost:8003
+  # 购物车微服务的地址
+  shoppingUrl: http://localhost:8004
+
+
+
+spring:
+  datasource: # 数据库配置
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${datasource.url}?useSSL=false&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&autoReconnect=true&failOverReadOnly=false&maxReconnects=10
+    username: root
+    password: vmware
+    hikari:
+      maximum-pool-size: 10 # 最大连接池数
+      max-lifetime: 1770000
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled=false:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+      dispatch-options-request: true  #跨域 允许options请求
+  thymeleaf:
+   cache: false #关闭缓存
+   prefix: classpath:/templates/
+     #开发模式
+  profiles:
+    active: dev
+  # Redis数据库索引（默认为0）
+  redis:
+    database: 0
+  # Redis服务器地址
+    host: 127.0.0.1
+  # Redis服务器连接端口
+    port: 6379
+  # Redis服务器连接密码（默认为空）
+    password: vmware
+  # 链接超时时间 单位 ms（毫秒）
+    timeout: 3000
+  ################ Redis 线程池设置 ##############
+  # 连接池最大连接数（使用负值表示没有限制） 默认 8
+    lettuce:
+      pool:
+        max-active: 8
+  # 连接池最大阻塞等待时间（使用负值表示没有限制） 默认 -1
+        max-wait: -1
+  # 连接池中的最大空闲连接 默认 8
+        max-idle: 8
+  # 连接池中的最小空闲连接 默认 0
+        min-idle: 0
+ 
+ #resources:
+ #    static-location: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/
+     
+jwt:
+  secret: credit_service
+  expiration: 100000
+  tokenHeader: Authorization
+  tokenHead: Bearer
+
+
+
+thk:
+   imagesRealPath: c:/workspace/dev_folder/Image/ 
+   imagesServerPath: /images 

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mybatis_demo.mapper.SaassetMapper">
+
+    <!--- @TableId(value = "id", type = IdType.AUTO)
+    private Long id;
+
+    private String name;
+
+    private BigDecimal price;
+
+    private Integer vendorId;
+
+    private String buyDate;
+
+    private Long reposId;
+
+    private Integer saStatus;
+    private Long bankId;
+
+    @TableField(exist = false)
+    private User reposUser;
+
+    @TableField(exist = false)
+    private User signerUser;
+
+    @TableField(exist = false)
+    private Satype satype;
+
+    @TableField(exist = false)
+    private Vendor vendor;
+
+    @TableField(exist = false)
+    private Bank bank;
+
+    @ApiModelProperty(value = "签收人，默认就是负责人")
+    private Integer signerId;
+
+    private Integer saType;
+
+    @TableField(fill = FieldFill.INSERT)
+    private Date gmtCreate;
+
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private Date gmtModified; -->
+
+    <resultMap id="saAssetInfo" type="com.example.mybatis_demo.entity.Saasset">
+        <id column="said" property="id"/>
+        <result column="saname" property="name"/>
+        <result column="saprice" property="price"/>
+        <result column="saserialnum" property="serialNum"/>
+        <result column="savendorid" property="vendorId"/>
+        <result column="sabuydate" property="buyDate"/>
+        <result column="sareposid" property="reposId"/>
+        <result column="sastatus" property="status"/>
+        <result column="sabankid" property="bankId"/>
+        <result column="sasignerid" property="signerId"/>
+        <result column="satype" property="saType"/>
+        <result column="sacreate" property="gmtCreate"/>
+        <result column="samodified" property="gmtModified"/>
+        <result column="sainstore" property="gmtInStore"/>
+
+
+        <association property="reposUser" javaType="com.example.mybatis_demo.entity.User">
+            <id column="reuserid" property="id"/>
+            <result column="reusername" property="name"/>
+        </association>
+
+        <association property="signerUser" javaType="com.example.mybatis_demo.entity.User">
+            <id column="siuserid" property="id"/>
+            <result column="siusername" property="name"/>
+        </association>
+
+
+        <association property="sa_type" javaType="com.example.mybatis_demo.entity.Satype">
+            <id column="satypeid" property="id"/>
+            <result column="satypename" property="name"/>
+        </association>
+
+        <association property="vendor" javaType="com.example.mybatis_demo.entity.Vendor">
+            <id column="vendorid" property="id"/>
+            <result column="vendorname" property="name"/>
+        </association>
+        <association property="bank" javaType="com.example.mybatis_demo.entity.Bank">
+            <id column="bankid" property="id"/>
+            <result column="bankname" property="name"/>
+            <result column="banklevel" property="level"/>
+            <result column="bankparentid" property="parent_id"/>
+        </association>
+    </resultMap>
+
+
+    <select id="listSaAsset" resultMap="saAssetInfo">
+        select saasset.id as said, saasset.name as saname, saasset.serial_num as saserialnum,saasset.price as saprice,saasset.vendor_id as savendorid,
+        saasset.buy_date as sabuydate, saasset.repos_id as sareposid, saasset.status as sastatus,
+        saasset.bank_id as sabankid, saasset.signer_id as sasignerid,
+        saasset.sa_type as satype, saasset.gmt_create as sacreate,saasset.gmt_modified as  samodified,
+        saasset.gmt_in_store as sainstore,
+               respons.id as reuserid,respons.name as  reusername,
+        signer.id as siuserid, signer.name as siusername,
+        satype.id as satypeid, satype.name as satypename,
+        vendor.id as vendorid, vendor.name as vendorname,
+        bank.id as bankid,bank.name as  bankname,bank.level as  banklevel,
+               bank.parent_id as bankparentid
+        from
+        saasset left join user signer on saasset.signer_id=signer.id
+        left join user respons on saasset.repos_id=respons.id,
+        satype,vendor,bank  where
+        saasset.vendor_id= vendor.id and saasset.sa_type = satype.id and
+        bank.id=saasset.bank_id
+        <if test="ew!=null" >
+            <if test="ew.nonEmptyOfWhere">
+                AND
+            </if>
+            ${ew.SqlSegment}
+        </if>
+    </select>
+
+</mapper>

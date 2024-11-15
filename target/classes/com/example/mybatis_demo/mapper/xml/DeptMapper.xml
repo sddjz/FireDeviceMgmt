@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mybatis_demo.mapper.DeptMapper">
+
+<resultMap id="deptList" type="com.example.mybatis_demo.entity.Dept">
+        	<id column="dept_id" property="id"/>
+        	<result column="parentId" property="parentId"/>
+        	<result column="name" property="name"/>
+            <result column="show_name" property="showName"/>
+            <result column="desc" property="desc"/>
+</resultMap>
+    <select id="listDept" resultMap="deptList">
+     SELECT dept.id as dept_id,parent_id,name,show_name,descp  FROM dept,dept_bank where dept_bank.bank_id=#{bankId} and dept.id=dept_bank.dept_id
+    </select>
+
+</mapper>
+
+<!-- 
+  	private Long id;
+    @JsonProperty(value="parentId")
+    @TableField(value ="parent_id")
+    private Long parentId;
+
+    @JsonProperty(value="name")
+    @TableField(value ="name")
+    private String name;
+
+    @JsonProperty(value="showName")
+    @TableField(value ="show_name")
+    private String showName;
+
+    private String desc;
+
+
+ -->
